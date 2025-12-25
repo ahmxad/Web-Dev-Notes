@@ -12,3 +12,4 @@ This repo is just my practice code and learning material while learning MernStac
 - [01-PROJECT](01-PROJECT/)
 - [MongoDB](MongoDB/)
 - [REST API](REST/)
+- [FastAPI](FastAPI-App/)
