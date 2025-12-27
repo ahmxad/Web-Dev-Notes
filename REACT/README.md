@@ -1,5 +1,5 @@
-#### Just little example codes
+#### Some very basic react projects
 
-> useState
+> Learning purposes
 
-> useEffect
+- [01_project](src/01_project/components/)

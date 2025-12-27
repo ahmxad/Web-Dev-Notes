@@ -1,0 +1,125 @@
+/* ------------------------- BASE STYLES ------------------------- */
+body {
+  margin: 0;
+}
+
+.con {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  margin: 0px 210px;
+}
+
+.texbtn {
+  flex: 1;
+}
+
+.btn {
+  margin-top: 80px;
+}
+
+.btn button {
+  background-color: rgb(175, 69, 69);
+  color: white;
+  border: none;
+  padding: 10px;
+  opacity: 0.95;
+  cursor: pointer;
+  margin-right: 9px;
+}
+
+.btn button:hover {
+  opacity: 1;
+}
+
+.img {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.img img {
+  height: 300px;
+}
+
+/* Logo default hidden on large screens */
+.con .logo img {
+  display: none;
+}
+
+/* ------------------------- MEDIA QUERIES ------------------------- */
+
+/* Tablet / small desktop: 770-950px */
+@media (min-width: 770px) and (max-width: 950px) {
+  .con {
+    flex-direction: row;
+    margin: 0 80px;
+    align-items: flex-start; /* text thoda upar rahe */
+  }
+
+  .btn {
+    margin-top: 60px;
+  }
+
+  .img img {
+    height: 260px; /* thoda chhota */
+  }
+
+  /* Logo still hidden */
+  .con .logo img {
+    display: none;
+  }
+}
+
+/* Mobile: 513-768px */
+@media (min-width: 513px) and (max-width: 768px) {
+  .con {
+    flex-direction: column;
+    margin: 0 20px;
+    text-align: center;
+  }
+
+  .btn {
+    margin-top: 40px;
+  }
+
+  .img img {
+    height: 220px;
+    margin-top: 30px;
+  }
+
+  /* Show logo */
+  .con .logo img {
+    display: none;
+  }
+}
+
+/* Extra small mobile: <=512px */
+@media (max-width: 512px) {
+  .con {
+    flex-direction: column;
+    margin: 0 15px;
+    text-align: center;
+  }
+
+  .btn {
+    margin-top: 30px;
+  }
+
+  .img img {
+    height: 180px;
+    margin-top: 20px;
+  }
+
+  .con .logo img {
+    display: block;
+    height: 40px;
+    width: 40px;
+  }
+
+  /* Optional: buttons full width on very small screens */
+  .btn button {
+    width: 100%;
+    margin: 8px 0 0 0;
+  }
+}

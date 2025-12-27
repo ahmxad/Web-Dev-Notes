@@ -1,17 +1,10 @@
-import { useState, useEffect } from "react";
-
-function App() {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    console.log("Count change hua:", count);
-  }, [count]);
-
-  return (
-    <button onClick={() => setCount(count + 1)}>
-      {count}
-    </button>
-  );
+import Main from "./01_project/components/Main";
+import Navigation from "./01_project/components/Navigation";
+export default function App(){
+    return(
+        <>
+        <Navigation/>
+        <Main/>
+        </>
+    )
 }
-
-export default App;
