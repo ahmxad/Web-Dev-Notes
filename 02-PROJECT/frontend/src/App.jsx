@@ -1,71 +1,34 @@
-import { useState, useEffect } from "react";
+import { createResource, Show, For } from "solid-js";
 import axios from "axios";
 
-function App() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // fetch users
+export default function App() {
   const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get("http://127.0.0.1:8000/users");
-      setUsers(res.data);
-    } catch (err) {
-      console.error("Error fetching users:", err);
-    } finally {
-      setLoading(false);
-    }
+    const res = await axios.get("http://127.0.0.1:8000/users");
+    return res.data;
   };
+  
+  const [users, { refetch }] = createResource(fetchUsers);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  // delete user
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://127.0.0.1:8000/users/${id}`);
-      setUsers(users.filter(u => u.id !== id)); // remove from state
-    } catch (err) {
-      console.error("Delete failed:", err);
-    }
-  };
-  const deleteTable = async () => {
-  try {
+  const deleteAllUsers = async () => {
     await axios.delete("http://127.0.0.1:8000/users");
-    setUsers([]); // clear UI instantly
-  } catch (err) {
-    console.error("Delete failed:", err);
-  }
+    refetch(); // 👈 UI refresh without page reload
+  };
+  const deleteUser = async (id) => {
+  await axios.delete(`http://127.0.0.1:8000/users/${id}`);
+  refetch(); // UI sync
 };
-
-  if (loading) return <p>Loading users...</p>;
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Users</h2>
-      <ul>
-        {users.map(u => (
-          <li key={u.id} style={{ marginBottom: "8px" }}>
-            {u.email}{" "}
-            <button 
-              onClick={() => handleDelete(u.id)} 
-              style={{ marginLeft: "10px" }}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-        <button 
-              onClick={() => deleteTable()} 
-              style={{ marginLeft: "10px" }}
-            >
-              Truncate table
-            </button>
-      </ul>
-    </div>
+    <>
+    <Show when={!users.loading} fallback={<p>Loading...</p>}>
+      <For each={users() || []}>{(user) => <p>id: {user.id} --- email: ({user.email})
+        <button onClick={() => deleteUser(user.id)}>
+        Delete
+      </button>
+        </p>}</For>
+    </Show>
+    <button onClick={deleteAllUsers}>
+        Delete All Users
+      </button>
+    </>
   );
 }
-
-export default App;
