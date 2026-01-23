@@ -1,34 +1,28 @@
 import { createResource, Show, For } from "solid-js";
-import axios from "axios";
 
 export default function App() {
-  const fetchUsers = async () => {
-    const res = await axios.get("http://127.0.0.1:8000/users");
-    return res.data;
+  const fetchBooks = async () => {
+    const res = await fetch("http://127.0.0.1:8000/books");
+    if (!res.ok) throw new Error("Network error");
+    return res.json();
   };
-  
-  const [users, { refetch }] = createResource(fetchUsers);
 
-  const deleteAllUsers = async () => {
-    await axios.delete("http://127.0.0.1:8000/users");
-    refetch(); // 👈 UI refresh without page reload
-  };
-  const deleteUser = async (id) => {
-  await axios.delete(`http://127.0.0.1:8000/users/${id}`);
-  refetch(); // UI sync
-};
+  const [books] = createResource(fetchBooks);
+
   return (
     <>
-    <Show when={!users.loading} fallback={<p>Loading...</p>}>
-      <For each={users() || []}>{(user) => <p>id: {user.id} --- email: ({user.email})
-        <button onClick={() => deleteUser(user.id)}>
-        Delete
-      </button>
-        </p>}</For>
-    </Show>
-    <button onClick={deleteAllUsers}>
-        Delete All Users
-      </button>
+      <Show when={!books.loading} fallback={<p>Loading...</p>}>
+        <div>
+          <For each={books()}>
+            {(book) => (
+              <div>
+                <h3>{book.name}</h3>
+                <p>{book.year}</p>
+              </div>
+            )}
+          </For>
+        </div>
+      </Show>
     </>
   );
 }
