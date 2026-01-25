@@ -1,4 +1,8 @@
 ## Starting with SQLModel
+### Libraries structure:
+
+![libraries](abc.png)
+
 ### Template code:
 
 ```py
