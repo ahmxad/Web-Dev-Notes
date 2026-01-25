@@ -1,26 +1,24 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from sqlmodel import Field, SQLModel, create_engine, Session, select
-from typing import ClassVar, List, Optional
+from typing import ClassVar, List
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 
-# TABLE
-class Book(SQLModel, table=True):
-    __tablename__: ClassVar[str] = "books"
+class Client(SQLModel, table=True):
+    __tablename__: ClassVar[str] = "clients"
     __table_args__ = {"schema": "sqlmodel"}
     id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
-    year: int | None = None
+    text: str | None
 
-# How the get request will look
-class ReadBook(SQLModel):
+class ReadClient(SQLModel):
     name: str
-    year: int | None
+    text: str | None
 
-# How the patch request will look
-class UpdateBook(SQLModel):
-    name: Optional[str] = None
-    year: Optional[int] = None
+class CreateClient(SQLModel):
+    name: str
+    text: str | None = None
+
 
 DATABASE_URL = "postgresql://postgres:abc12345@localhost:5432/sqlmodeldb"
 engine = create_engine(DATABASE_URL, echo=True)
@@ -40,48 +38,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# GET
-@app.get('/books', response_model=List[ReadBook])
-def getting():
+@app.get("/clients", response_model=List[ReadClient])
+def get_clients():
     with Session(engine) as session:
-        books = session.exec(select(Book)).all()
-        return books
+        clients = session.exec(select(Client)).all()
+        return clients
     
-# POST
-@app.post('/books', response_model=ReadBook)
-def create_book(book:Book):
+@app.post("/clients", response_model=ReadClient)
+def create_client(client: CreateClient):
     with Session(engine) as session:
-        session.add(book)
+        db_client = Client.model_validate(client)
+        session.add(db_client)
         session.commit()
-        session.refresh(book)
-        return book
-    
-# PATCH
-@app.patch("/books/{id}", response_model=ReadBook)
-def update_book(id: int, book_update: UpdateBook):
-    with Session(engine) as session:
-        book = session.get(Book, id)
-        if not book:
-            raise HTTPException(status_code=404, detail="Book not found")
-
-        # Update only the fields provided
-        if book_update.name is not None:
-            book.name = book_update.name
-        if book_update.year is not None:
-            book.year = book_update.year
-
-        session.add(book)
-        session.commit()
-        session.refresh(book)
-        return book
-
-# DELETE
-@app.delete('/books/{id}')
-def delete_book(id: int):
-    with Session(engine) as session:
-        book = session.get(Book, id)
-        if not book:
-            raise HTTPException(status_code=404, detail="Book not found")
-        session.delete(book)
-        session.commit()
-    return {"Message": "Book deleted successfully"}
+        session.refresh(db_client)
+        return client
