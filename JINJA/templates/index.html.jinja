@@ -1,0 +1,11 @@
+<h2>Languages</h2>
+
+<ul>
+{% for lang in languages %}
+  <li>
+    <a href="/language/{{ lang.id }}">
+      {{ lang.name }}
+    </a>
+  </li>
+{% endfor %}
+</ul>
