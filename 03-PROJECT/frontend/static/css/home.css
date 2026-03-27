@@ -1,0 +1,15 @@
+/* Custom styles for home.html */
+
+/* Make the carousel smaller and centered */
+.carousel {
+  max-width: 800px; /* Adjust this value to make it smaller */
+  margin: 0 auto; /* Center it */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Optional: Adjust image height if needed */
+.carousel-item img {
+  height: 400px; /* Set a fixed height, adjust as needed */
+  object-fit: cover; /* Ensures images fit nicely */
+}
