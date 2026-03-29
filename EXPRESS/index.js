@@ -11,6 +11,8 @@ app.listen(PORT, ()=>{
     console.log(`Running at ${PORT} 🐥`)
 })
 // HOME
-app.get("/", (req, res)=>{
-    res.render("home")
+app.get("/ig/:username", (req, res)=>{
+    let {username} = req.params;
+    let val = Math.floor(Math.random()*6)+1;
+    res.render("home", {username, val})
 })
